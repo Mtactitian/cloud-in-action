@@ -1,6 +1,7 @@
 package com.alexb.employeeservice.service;
 
 import com.alexb.employeeservice.client.DepartmentDiscoveryClient;
+import com.alexb.employeeservice.client.DepartmentFeignClient;
 import com.alexb.employeeservice.dto.DepartmentDto;
 import com.alexb.employeeservice.dto.EmployeeDto;
 import com.alexb.employeeservice.dto.UserInfo;
@@ -17,6 +18,9 @@ public class UserService {
 
     private final EmpRepository empRepository;
     private final DepartmentDiscoveryClient departmentDiscoveryClient;
+
+    @Deprecated
+    private final DepartmentFeignClient departmentFeignClient;
 
     public Employee getEmployee(Integer id) {
         return empRepository.getOne(id);
