@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Getter
 public class Department {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "deptno")
     private Integer id;
 

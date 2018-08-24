@@ -2,7 +2,8 @@ package com.alexb.employeeservice.repository;
 
 
 import com.alexb.employeeservice.model.Employee;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.Repository;
 
-public interface EmpRepository extends JpaRepository<Employee, Integer> {
+public interface EmpRepository extends Repository<Employee, Integer> {
+    Employee findByName(String name);
 }
