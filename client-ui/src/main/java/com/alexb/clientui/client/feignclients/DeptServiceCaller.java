@@ -1,4 +1,4 @@
-package com.alexb.clientui.feignclients;
+package com.alexb.clientui.client.feignclients;
 
 import com.alexb.clientui.model.DepartmentDto;
 import org.springframework.cloud.openfeign.FeignClient;

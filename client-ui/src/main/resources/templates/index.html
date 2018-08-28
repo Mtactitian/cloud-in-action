@@ -6,11 +6,12 @@
     <title>Employee Search</title>
     <script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
 </head>
+<!--TODO:move css styles and javascript code to separate files-->
 <style>
     .card {
         display: inline-block;
         vertical-align: top;
-        margin:0 10px;
+        margin: 0 10px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         transition: 0.3s;
         width: 200px;
@@ -28,63 +29,95 @@
     .container {
         padding: 2px 16px;
     }
+
+    .edit-btn {
+        background-color: white;
+        padding: 5px 5px;
+        width: 60%;
+        border: 1px solid #cccc;
+        border-radius: 4px;
+        margin-bottom: 5px;
+    }
+
+    .input {
+        border-radius: 4px;
+        border: 1px solid #cccccc;
+        padding: 10px 20px;
+        margin: 0 0 10px 0;
+    }
 </style>
 <body style="text-align: center">
 
-    <div class="card">
-
-        <form style="margin-bottom: 10px" action="#" method="GET">
-            <label>
-                <input id="empNameInput" placeholder="Input employee name"
-                       style="border-radius: 4px; border: 1px solid #cccccc;padding: 10px 20px"
-                       type="text"/>
-            </label>
-        </form>
-
-        <img th:src="img_avatar2.png" alt="Avatar" style="width:200px;height: 200px">
-        <div style="text-align: center" id="empContainer" class="container">
-        </div>
+<div class="card">
+    <form style="margin-bottom: 10px" action="#" method="GET">
+        <label>
+            <input id="empNameInput" placeholder="Input employee id"
+                   class="input" type="text"/>
+        </label>
+        <button onclick="search()" class="edit-btn">Search</button>
+    </form>
+    <img id="empImg" th:src="sex_male.png" alt="Avatar" style="width:200px;height: 200px">
+    <div style="text-align: center" id="empContainer" class="container">
     </div>
+</div>
 
-    <div class="card">
-
-        <form style="margin-bottom: 10px" action="#" method="GET">
-            <label>
-                <input id="deptNameInput" placeholder="Input department name"
-                       style="border-radius: 4px; border: 1px solid #cccccc;padding: 10px 20px"
-                       type="text"/>
-            </label>
-        </form>
-
-        <img th:src="dept.png" alt="Avatar" style="width:200px;height: 200px">
-        <div style="text-align: center" id="deptContainer" class="container">
-        </div>
+<div class="card">
+    <form style="margin-bottom: 10px" action="#" method="GET">
+        <label>
+            <input id="deptNameInput" placeholder="Input department name"
+                   class="input"
+                   type="text"/>
+        </label>
+    </form>
+    <img th:src="dept.png" alt="Avatar" style="width:200px;height: 200px">
+    <div style="text-align: center" id="deptContainer" class="container">
     </div>
+</div>
 </div>
 
 
 <script>
+    let employee = null;
 
-    let empContainer = $('#empContainer');
-    $('#empNameInput').on('input', function (event) {
-        let ename = event.target.value;
-        fetch("/employee" + "?ename=" + ename)
+    let search = () => {
+        let id = document.querySelector('#empNameInput').value;
+        fetch("/employee/" + id)
             .then((resp) => {
                 if (resp.status === 200) {
                     return resp.json()
                 }
                 else throw "Bad Response";
             })
-            .then(function (employee) {
-                empContainer.append(`<h4><b>${employee.name}</b></h4>`);
-                empContainer.append(`<p>${employee.job}</p>`);
-                empContainer.append(`<p>Hire date: ${employee.hireDate}</p>`);
-                empContainer.append(`<p>Salary: ${employee.salary}</p>`);
+            .then(function (empl) {
+                employee = {...empl};
+                drawEmployee();
+                return employee.sex;
             })
-            .catch(reason => {
+            .then((sex) => {
+                let imageId = $('#empImg');
+                switch (sex) {
+                    case "FEMALE":
+                        imageId.attr('src', 'http://localhost:8080/sex_female.png');
+                        break;
+                    case "MALE":
+                        imageId.attr('src', 'http://localhost:8080/sex_male.png');
+                }
+            })
+            .catch(() => {
                 empContainer.children().remove();
             })
-    });
+    };
+
+    let empContainer = $('#empContainer');
+
+    let drawEmployee = () => {
+        empContainer.children().remove();
+        empContainer.append(`<h4><b>${employee.name}</b></h4>`);
+        empContainer.append(`<p>${employee.job}</p>`);
+        empContainer.append(`<p>Hire date: ${employee.hireDate}</p>`);
+        empContainer.append(`<p>Salary: ${employee.salary}</p>`);
+        empContainer.append('<button onclick="changeToInputType()" class="edit-btn">Edit</button>');
+    };
 
     let deptContainer = $('#deptContainer');
     $('#deptNameInput').on('input', function (event) {
@@ -100,10 +133,58 @@
                 deptContainer.append(`<h4><b>${dept.name}</b></h4>`);
                 deptContainer.append(`<p>${dept.location}</p>`);
             })
-            .catch(reason => {
+            .catch(() => {
                 deptContainer.children().remove();
             })
     });
+
+
+    let changeToInputType = () => {
+        empContainer.children().remove();
+        empContainer.append(`<input onchange="changeName(event)" class="input" value="${employee.name}"/>`);
+        empContainer.append(`<input onchange="changeJob(event)" class="input" value="${employee.job}"/>`);
+        empContainer.append(`<input onchange="changeHireDate(event)" class="input" value="${employee.hireDate}"/>`);
+        empContainer.append(`<input onchange="changeSalary(event)" class="input" value="${employee.salary}"/>`);
+        empContainer.append('<button onclick="sendData()" class="edit-btn">Send</button>');
+    };
+
+    let changeName = (event) => {
+        employee.name = event.target.value;
+    };
+
+    let changeJob = (event) => {
+        employee.job = event.target.value;
+    };
+
+    let changeHireDate = (event) => {
+        employee.hireDate = event.target.value;
+    };
+
+    let changeSalary = (event) => {
+        employee.salary = event.target.value;
+    };
+
+    let sendData = () => {
+
+        return fetch("/employee/" + employee.id, {
+            method: 'PATCH',
+            body: JSON.stringify(employee),
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        })
+            .then(response => {
+                if (!response.ok) throw "wrong input";
+                return response.json()
+            })
+            .then(empl => {
+                employee = {...empl};
+                drawEmployee();
+            })
+            .catch(() => alert('wrong input'))
+
+    };
+
 
 </script>
 </body>

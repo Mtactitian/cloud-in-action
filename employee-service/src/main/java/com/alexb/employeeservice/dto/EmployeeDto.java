@@ -1,11 +1,13 @@
-package com.alexb.clientui.model;
+package com.alexb.employeeservice.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
@@ -22,4 +24,5 @@ public class EmployeeDto {
     private Double salary;
 
     private String sex;
+
 }

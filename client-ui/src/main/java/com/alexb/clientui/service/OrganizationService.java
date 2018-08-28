@@ -1,7 +1,8 @@
 package com.alexb.clientui.service;
 
-import com.alexb.clientui.feignclients.DeptServiceCaller;
-import com.alexb.clientui.feignclients.EmpServiceCaller;
+import com.alexb.clientui.client.EmployeeServiceClient;
+import com.alexb.clientui.client.feignclients.DeptServiceCaller;
+import com.alexb.clientui.client.feignclients.EmpServiceCaller;
 import com.alexb.clientui.model.DepartmentDto;
 import com.alexb.clientui.model.EmployeeDto;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,11 @@ public class OrganizationService {
     private final DeptServiceCaller deptServiceCaller;
     private final EmpServiceCaller empServiceCaller;
 
-    public EmployeeDto getEmployee(String name) {
-        return empServiceCaller.getEmployee(name);
+    @Deprecated
+    private final EmployeeServiceClient employeeServiceClient;
+
+    public EmployeeDto getEmployee(Integer id) {
+        return empServiceCaller.getEmployee(id);
     }
 
     public DepartmentDto getDepartmentById(Integer id) {
@@ -24,5 +28,9 @@ public class OrganizationService {
 
     public DepartmentDto getDepartmentByName(String dname) {
         return deptServiceCaller.getDepartmentByName(dname);
+    }
+
+    public EmployeeDto editEmployee(Integer id, EmployeeDto employeeDto) {
+        return empServiceCaller.editEmployee(id, employeeDto);
     }
 }

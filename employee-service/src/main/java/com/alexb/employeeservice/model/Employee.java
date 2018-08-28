@@ -21,6 +21,9 @@ public class Employee {
     @Column(name = "ename")
     private String name;
 
+    @Column(name = "sex")
+    private Gender sex;
+
     @Column(name = "job")
     private String job;
 
