@@ -1,6 +1,6 @@
 package com.alexb.employeeservice.aspects;
 
-import com.alexb.employeeservice.annotation.RandomDelay;
+import com.alexb.employeeservice.annotation.Delay;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,15 +13,15 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 @Slf4j
-public class RandomDelayAspect {
+public class DelayAspect {
 
-    @Before(value = "@annotation(com.alexb.employeeservice.annotation.RandomDelay)")
+    @Before(value = "@annotation(com.alexb.employeeservice.annotation.Delay)")
     public void injectRandomDelay(JoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
 
-        RandomDelay randomDelay = method.getAnnotation(RandomDelay.class);
-        int timeToSleep = randomDelay.millis();
+        Delay delay = method.getAnnotation(Delay.class);
+        int timeToSleep = delay.millis();
 
         log.debug("Sleep started");
         Thread.sleep(timeToSleep);

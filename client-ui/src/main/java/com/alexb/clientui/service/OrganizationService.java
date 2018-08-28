@@ -8,6 +8,8 @@ import com.alexb.clientui.model.EmployeeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OrganizationService {
@@ -15,6 +17,9 @@ public class OrganizationService {
     private final DeptServiceCaller deptServiceCaller;
     private final EmpServiceCaller empServiceCaller;
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     private final EmployeeServiceClient employeeServiceClient;
 
@@ -32,5 +37,9 @@ public class OrganizationService {
 
     public EmployeeDto editEmployee(Integer id, EmployeeDto employeeDto) {
         return empServiceCaller.editEmployee(id, employeeDto);
+    }
+
+    public List<EmployeeDto> getEmployees(Integer id) {
+        return empServiceCaller.getEmployees(id);
     }
 }

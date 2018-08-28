@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -37,6 +39,12 @@ public class BaseController {
     public EmployeeDto employeeDto(@PathVariable(name = "id") Integer id,
                                    @RequestBody EmployeeDto employeeDto) {
         return organizationService.editEmployee(id, employeeDto);
+    }
+
+    @GetMapping(value = "/employee/dept/{id}")
+    @ResponseBody
+    public List<EmployeeDto> getEmployees(@PathVariable(name = "id") Integer id) {
+        return organizationService.getEmployees(id);
     }
 
     @ExceptionHandler(value = Throwable.class)

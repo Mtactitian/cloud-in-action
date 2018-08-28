@@ -30,6 +30,11 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
+    @GetMapping(value = "/dept/{id}")
+    public ResponseEntity getEmployeesByDeptNo(@PathVariable(name = "id") Integer id) {
+        return ResponseEntity.ok(employeeService.getEmployeesByDeptNo(id));
+    }
+
     @ExceptionHandler(value = EntityNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public void handleError(Exception ex) {

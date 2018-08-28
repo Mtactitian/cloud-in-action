@@ -16,6 +16,7 @@
         <module>eureka-server</module>
         <module>department-service</module>
         <module>client-ui</module>
+        <module>zuul-gateway</module>
     </modules>
 
 

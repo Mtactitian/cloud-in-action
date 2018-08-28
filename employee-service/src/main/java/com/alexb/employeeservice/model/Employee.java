@@ -39,4 +39,6 @@ public class Employee {
     @Column(name = "comm")
     private Double commission;
 
+    @Column(name = "deptno")
+    private Integer departmentNumber;
 }

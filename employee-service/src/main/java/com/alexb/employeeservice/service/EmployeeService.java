@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,7 +21,7 @@ public class EmployeeService {
     private final ConversionService conversionService;
     private final EmpRepository empRepository;
 
-    @RandomDelay(millis = 900)
+    @RandomDelay(millis = 100)
     public EmployeeDto getEmployeeById(Integer id) {
         Employee employee = empRepository.findById(id);
         return conversionService.convert(Optional.ofNullable(employee)
@@ -41,5 +42,9 @@ public class EmployeeService {
         employeeDto.setId(id);
 
         return employeeDto;
+    }
+
+    public List<Employee> getEmployeesByDeptNo(Integer deptNo) {
+        return empRepository.findByDepartmentNumber(deptNo);
     }
 }

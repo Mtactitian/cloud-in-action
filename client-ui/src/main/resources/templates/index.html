@@ -11,7 +11,7 @@
     .card {
         display: inline-block;
         vertical-align: top;
-        margin: 0 10px;
+        margin: 10px 10px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         transition: 0.3s;
         width: 200px;
@@ -44,131 +44,110 @@
         border: 1px solid #cccccc;
         padding: 10px 20px;
         margin: 0 0 10px 0;
+        width: 70%;
     }
 </style>
 <body style="text-align: center">
 
 <div class="card">
-    <form style="margin-bottom: 10px" action="#" method="GET">
-        <label>
-            <input id="empNameInput" placeholder="Input employee id"
-                   class="input" type="text"/>
-        </label>
-        <button onclick="search()" class="edit-btn">Search</button>
-    </form>
-    <img id="empImg" th:src="sex_male.png" alt="Avatar" style="width:200px;height: 200px">
-    <div style="text-align: center" id="empContainer" class="container">
-    </div>
-</div>
-
-<div class="card">
-    <form style="margin-bottom: 10px" action="#" method="GET">
-        <label>
-            <input id="deptNameInput" placeholder="Input department name"
-                   class="input"
-                   type="text"/>
-        </label>
-    </form>
+    <label>
+        <input id="deptNameInput" placeholder="Input department name"
+               class="input"
+               type="text"/>
+    </label>
+    <button onclick="searchEmployees()" class="edit-btn">Search</button>
     <img th:src="dept.png" alt="Avatar" style="width:200px;height: 200px">
     <div style="text-align: center" id="deptContainer" class="container">
     </div>
 </div>
-</div>
 
 
 <script>
-    let employee = null;
+    let employees = null;
+    const femaleImgUrl = "http://localhost:8080/sex_female.png";
+    const maleImgUrl = "http://localhost:8080/sex_male.png";
 
-    let search = () => {
-        let id = document.querySelector('#empNameInput').value;
-        fetch("/employee/" + id)
-            .then((resp) => {
+    const clear = () => {
+        $('.card').remove();
+    };
+
+    let searchEmployees = () => {
+        let deptId = document.querySelector('#deptNameInput').value;
+        clear();
+        fetch(`/employee/dept/${deptId}`)
+            .then(resp => {
                 if (resp.status === 200) {
                     return resp.json()
                 }
                 else throw "Bad Response";
             })
-            .then(function (empl) {
-                employee = {...empl};
-                drawEmployee();
-                return employee.sex;
-            })
-            .then((sex) => {
-                let imageId = $('#empImg');
-                switch (sex) {
-                    case "FEMALE":
-                        imageId.attr('src', 'http://localhost:8080/sex_female.png');
-                        break;
-                    case "MALE":
-                        imageId.attr('src', 'http://localhost:8080/sex_male.png');
-                }
-            })
-            .catch(() => {
-                empContainer.children().remove();
+            .then(emps => {
+                employees = [...emps];
+                drawEmployees();
             })
     };
 
-    let empContainer = $('#empContainer');
-
-    let drawEmployee = () => {
-        empContainer.children().remove();
-        empContainer.append(`<h4><b>${employee.name}</b></h4>`);
-        empContainer.append(`<p>${employee.job}</p>`);
-        empContainer.append(`<p>Hire date: ${employee.hireDate}</p>`);
-        empContainer.append(`<p>Salary: ${employee.salary}</p>`);
-        empContainer.append('<button onclick="changeToInputType()" class="edit-btn">Edit</button>');
+    let drawEmployees = () => {
+        employees.forEach((employee, index) => {
+            let img = getImgElem(employee.sex);
+            $('body').append(`
+                                        <div class="card">
+                                        ${img}
+                                        <h4><b>${employee.name}</b></h4>
+                                        <p>${employee.job}</p>
+                                        <p>Hire date: ${employee.hireDate}</p>
+                                        <p>Salary: ${employee.salary}</p>
+                                        <button onclick="changeToInputType(${index})" class="edit-btn">Edit</button>
+                                        </div>`);
+        })
     };
 
-    let deptContainer = $('#deptContainer');
-    $('#deptNameInput').on('input', function (event) {
-        let deptName = event.target.value;
-        fetch("/dept" + "?dname=" + deptName)
-            .then((resp) => {
-                if (resp.status === 200) {
-                    return resp.json()
-                }
-                else throw "Bad Response";
-            })
-            .then(function (dept) {
-                deptContainer.append(`<h4><b>${dept.name}</b></h4>`);
-                deptContainer.append(`<p>${dept.location}</p>`);
-            })
-            .catch(() => {
-                deptContainer.children().remove();
-            })
-    });
+    let changeToInputType = (index) => {
+        const cards = $('.card');
+        const card = cards.eq(index);
 
+        card.children().remove();
 
-    let changeToInputType = () => {
-        empContainer.children().remove();
-        empContainer.append(`<input onchange="changeName(event)" class="input" value="${employee.name}"/>`);
-        empContainer.append(`<input onchange="changeJob(event)" class="input" value="${employee.job}"/>`);
-        empContainer.append(`<input onchange="changeHireDate(event)" class="input" value="${employee.hireDate}"/>`);
-        empContainer.append(`<input onchange="changeSalary(event)" class="input" value="${employee.salary}"/>`);
-        empContainer.append('<button onclick="sendData()" class="edit-btn">Send</button>');
+        const employee = employees[index];
+
+        card.append(getImgElem(employee.sex));
+        card.append(`<input onchange="changeName(event,${index})" class="input" value="${employee.name}"/>`);
+        card.append(`<input onchange="changeJob(event,${index})" class="input" value="${employee.job}"/>`);
+        card.append(`<input onchange="changeHireDate(event,${index})" class="input" value="${employee.hireDate}"/>`);
+        card.append(`<input onchange="changeSalary(event,${index})" class="input" value="${employee.salary}"/>`);
+        card.append(`<button onclick="sendData(${index})" class="edit-btn">Send</button>`);
     };
 
-    let changeName = (event) => {
-        employee.name = event.target.value;
+    const getImgElem = (sex) => {
+        if (sex === "MALE") {
+            return `<img id="empImg" src=${maleImgUrl} alt="Avatar" style="width:200px;height:200px">`
+        }
+        else if (sex === "FEMALE") {
+            return `<img id="empImg" src=${femaleImgUrl} alt="Avatar" style="width:200px;height:200px">`
+        }
     };
 
-    let changeJob = (event) => {
-        employee.job = event.target.value;
+    let changeName = (event, index) => {
+        employees[index].name = event.target.value;
     };
 
-    let changeHireDate = (event) => {
-        employee.hireDate = event.target.value;
+    let changeJob = (event, index) => {
+        employees[index].job = event.target.value;
     };
 
-    let changeSalary = (event) => {
-        employee.salary = event.target.value;
+    let changeHireDate = (event, index) => {
+        employees[index].hireDate = event.target.value;
     };
 
-    let sendData = () => {
+    let changeSalary = (event, index) => {
+        employees[index].salary = event.target.value;
+    };
 
-        return fetch("/employee/" + employee.id, {
+    let sendData = (index) => {
+
+        return fetch("/employee/" + employees[index].id, {
             method: 'PATCH',
-            body: JSON.stringify(employee),
+            body: JSON.stringify(employees[index]),
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
             },
@@ -177,9 +156,9 @@
                 if (!response.ok) throw "wrong input";
                 return response.json()
             })
-            .then(empl => {
-                employee = {...empl};
-                drawEmployee();
+            .then(() => {
+                clear();
+                drawEmployees();
             })
             .catch(() => alert('wrong input'))
 
