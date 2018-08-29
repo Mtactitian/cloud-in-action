@@ -2,8 +2,10 @@ package com.alexb.employeeservice.controller;
 
 import com.alexb.employeeservice.dto.EmployeeDto;
 import com.alexb.employeeservice.service.EmployeeService;
+import com.alexb.employeeservice.utils.UserContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +33,8 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "/dept/{id}")
-    public ResponseEntity getEmployeesByDeptNo(@PathVariable(name = "id") Integer id) {
+    public ResponseEntity getEmployeesByDeptNo(@PathVariable(name = "id") Integer id, @RequestHeader HttpHeaders headers) {
+        log.info("Correlation id: {}",UserContextHolder.getContext().getCorrelationId());
         return ResponseEntity.ok(employeeService.getEmployeesByDeptNo(id));
     }
 

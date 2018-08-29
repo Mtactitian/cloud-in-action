@@ -1,6 +1,6 @@
 package com.alexb.employeeservice.service;
 
-import com.alexb.employeeservice.annotation.RandomDelay;
+import com.alexb.employeeservice.annotation.Delay;
 import com.alexb.employeeservice.dto.EmployeeDto;
 import com.alexb.employeeservice.model.Employee;
 import com.alexb.employeeservice.repository.EmpRepository;
@@ -21,7 +21,7 @@ public class EmployeeService {
     private final ConversionService conversionService;
     private final EmpRepository empRepository;
 
-    @RandomDelay(millis = 100)
+    @Delay(millis = 100)
     public EmployeeDto getEmployeeById(Integer id) {
         Employee employee = empRepository.findById(id);
         return conversionService.convert(Optional.ofNullable(employee)
