@@ -1,0 +1,14 @@
+CREATE TABLE t_user (
+	id       INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	username VARCHAR(100) NOT NULL UNIQUE,
+	password VARCHAR(100) NOT NULL,
+	active   CHAR(1)      NOT NULL
+);
+
+CREATE TABLE t_role (
+	id      INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	role    VARCHAR(100) NOT NULL,
+	user_id INTEGER,
+	FOREIGN KEY (user_id) REFERENCES t_user (id),
+	UNIQUE (role, user_id)
+);
