@@ -1,44 +1,36 @@
 package com.alexb.employeeservice.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "emp")
-@Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
+@Data
+@Document(collection = "employees")
+@Builder
 public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "empno")
-    private Integer id;
 
-    @Column(name = "ename")
+    @Id
+    private String id;
+
+    private Integer number;
+
     private String name;
 
-    @Column(name = "sex")
-    private Gender sex;
+    private Gender gender;
 
-    @Column(name = "job")
     private String job;
 
-    @Column(name = "mgr")
-    private Integer managerId;
-
-    @Column(name = "hiredate")
     private LocalDate hireDate;
 
-    @Column(name = "sal")
     private Double salary;
 
-    @Column(name = "comm")
     private Double commission;
 
-    @Column(name = "deptno")
-    private Integer departmentNumber;
 }

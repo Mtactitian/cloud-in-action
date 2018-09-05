@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @Getter
 public class DepartmentDto {
-    private Integer id;
+    private Integer number;
     private String name;
     private String location;
 

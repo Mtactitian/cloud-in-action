@@ -1,6 +1,6 @@
 package com.alexb.employeeservice.controller;
 
-import com.alexb.employeeservice.dto.EmployeeDto;
+import com.alexb.employeeservice.model.Employee;
 import com.alexb.employeeservice.service.EmployeeService;
 import com.alexb.employeeservice.utils.UserContextHolder;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping(value = "/v1/employee")
@@ -22,7 +21,7 @@ public class EmployeeController {
 
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity editEmployee(@PathVariable(value = "id") Integer id,
-                                       @RequestBody EmployeeDto employeeDto) {
+                                       @RequestBody Employee employeeDto) {
         return ResponseEntity.ok(employeeService.editEmployeeInfo(id, employeeDto));
     }
 
@@ -34,11 +33,11 @@ public class EmployeeController {
 
     @GetMapping(value = "/dept/{id}")
     public ResponseEntity getEmployeesByDeptNo(@PathVariable(name = "id") Integer id, @RequestHeader HttpHeaders headers) {
-        log.info("Correlation id: {}",UserContextHolder.getContext().getCorrelationId());
+        log.info("Correlation id: {}", UserContextHolder.getContext().getCorrelationId());
         return ResponseEntity.ok(employeeService.getEmployeesByDeptNo(id));
     }
 
-    @ExceptionHandler(value = EntityNotFoundException.class)
+    @ExceptionHandler(value = RuntimeException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public void handleError(Exception ex) {
         log.error(ex.getMessage());

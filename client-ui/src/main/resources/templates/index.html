@@ -89,7 +89,7 @@
 
     let drawEmployees = () => {
         employees.forEach((employee, index) => {
-            let img = getImgElem(employee.sex);
+            let img = getImgElem(employee.gender);
             $('body').append(`
                                         <div class="card">
                                         ${img}
@@ -110,7 +110,7 @@
 
         const employee = employees[index];
 
-        card.append(getImgElem(employee.sex));
+        card.append(getImgElem(employee.gender));
         card.append(`<input onchange="changeName(event,${index})" class="input" value="${employee.name}"/>`);
         card.append(`<input onchange="changeJob(event,${index})" class="input" value="${employee.job}"/>`);
         card.append(`<input onchange="changeHireDate(event,${index})" class="input" value="${employee.hireDate}"/>`);
@@ -118,11 +118,11 @@
         card.append(`<button onclick="sendData(${index})" class="edit-btn">Send</button>`);
     };
 
-    const getImgElem = (sex) => {
-        if (sex === "MALE") {
+    const getImgElem = (gender) => {
+        if (gender === "MALE") {
             return `<img id="empImg" src=${maleImgUrl} alt="Avatar" style="width:200px;height:200px">`
         }
-        else if (sex === "FEMALE") {
+        else if (gender === "FEMALE") {
             return `<img id="empImg" src=${femaleImgUrl} alt="Avatar" style="width:200px;height:200px">`
         }
     };
@@ -145,7 +145,7 @@
 
     let sendData = (index) => {
 
-        return fetch("/employee/" + employees[index].id, {
+        return fetch("/employee/" + employees[index].number, {
             method: 'PATCH',
             body: JSON.stringify(employees[index]),
             headers: {

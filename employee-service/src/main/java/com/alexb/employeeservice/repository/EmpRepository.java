@@ -1,13 +1,12 @@
 package com.alexb.employeeservice.repository;
 
-
 import com.alexb.employeeservice.model.Employee;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface EmpRepository extends Repository<Employee, Integer> {
-    Employee findById(Integer id);
+public interface EmpRepository extends MongoRepository<Employee, String> {
+    Employee findByName(String name);
 
-    List<Employee> findByDepartmentNumber(Integer departmentNumber);
+    Optional<Employee> findByNumber(Integer number);
 }

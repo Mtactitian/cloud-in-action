@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 public class EmployeeDto {
 
-    private Integer id;
+    private Integer number;
 
     private String name;
 
@@ -21,5 +21,5 @@ public class EmployeeDto {
 
     private Double salary;
 
-    private String sex;
+    private String gender;
 }

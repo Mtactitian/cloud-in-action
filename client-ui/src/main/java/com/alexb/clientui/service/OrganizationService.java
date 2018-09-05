@@ -6,12 +6,14 @@ import com.alexb.clientui.client.feignclients.EmpServiceCaller;
 import com.alexb.clientui.model.DepartmentDto;
 import com.alexb.clientui.model.EmployeeDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrganizationService {
 
     private final DeptServiceCaller deptServiceCaller;
@@ -40,6 +42,7 @@ public class OrganizationService {
     }
 
     public List<EmployeeDto> getEmployees(Integer id) {
+        log.debug("Requested Employees from given dept: {}", id);
         return empServiceCaller.getEmployees(id);
     }
 }
