@@ -17,6 +17,7 @@
         <module>client-ui</module>
         <module>zuul-gateway</module>
         <module>auth</module>
+        <module>zipkin-server</module>
     </modules>
 
 

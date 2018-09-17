@@ -38,6 +38,7 @@ public class OrganizationService {
     }
 
     public EmployeeDto editEmployee(Integer id, EmployeeDto employeeDto) {
+        log.debug("Requested editing employee info: {}", id);
         return empServiceCaller.editEmployee(id, employeeDto);
     }
 
